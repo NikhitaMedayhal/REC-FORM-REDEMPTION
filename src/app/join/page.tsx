@@ -82,7 +82,13 @@ const DOMAIN_QUESTIONS: Record<"marketing" | "media" | "design", DomainQuestion[
 };
 
 function deriveYear(semester: string | undefined | null): string {
-  const sem = parseInt(semester ?? "", 10);
+  if (!semester) return "";
+  // Defensive: extract the first run of digits rather than requiring
+  // the string to start with one, in case a raw PESU value like
+  // "Sem-8" ever reaches here instead of the normalized "8".
+  const match = semester.match(/\d+/);
+  if (!match) return "";
+  const sem = parseInt(match[0], 10);
   if (!sem || Number.isNaN(sem)) return "";
   const year = Math.ceil(sem / 2);
   return String(year);
@@ -377,11 +383,9 @@ export default function JoinPage() {
                   <option value="1">1st year</option>
                   <option value="2">2nd year</option>
                   <option value="3">3rd year</option>
-                  <option value="4">4th year</option>
-                  <option value="5">5th year</option>
                 </select>
                 <span className="field-hint">
-                  pre-filled from your PESU semester — change it if it&apos;s
+                  pre-filled from your PESU details — change it if it&apos;s
                   wrong
                 </span>
               </div>
