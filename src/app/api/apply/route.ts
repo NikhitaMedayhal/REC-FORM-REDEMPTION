@@ -5,6 +5,7 @@ import { COOKIE_NAME, verifyToken } from "@/lib/jwt";
 import { applicationSchema } from "@/lib/validation";
 import { checkSubmissionRateLimit } from "@/lib/rateLimit";
 import { appendFormSubmissionToSheet } from "@/lib/googleSheets";
+import { deriveYear } from "@/lib/date";
 
 export const runtime = "nodejs";
 
@@ -89,7 +90,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  // 4. Validate with the shared Zod schema.
+  // 4. Identity fields must never come from the client. Overwrite
+  // whatever the request body claims with the verified values from the
+  // JWT session before validation, so a tampered payload can't forge an
+  // application under someone else's name/srn/branch, or claim a year
+  // that doesn't match their actual semester.
+  body.fullName = session.name;
+  body.srn = session.srn;
+  body.branch = session.branch;
+  body.year = deriveYear(session.semester);
+
+  // 5. Validate with the shared Zod schema.
   const parsed = applicationSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(

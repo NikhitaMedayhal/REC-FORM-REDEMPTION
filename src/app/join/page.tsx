@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useAuth } from "../_components/auth-context";
 import Terminal from "./Terminal";
+import { deriveYear } from "@/lib/date";
 
 type DomainId = "marketing" | "media" | "design" | "tech" | "events";
 
@@ -81,19 +82,6 @@ const DOMAIN_QUESTIONS: Record<"marketing" | "media" | "design", DomainQuestion[
   ],
 };
 
-function deriveYear(semester: string | undefined | null): string {
-  if (!semester) return "";
-  // Defensive: extract the first run of digits rather than requiring
-  // the string to start with one, in case a raw PESU value like
-  // "Sem-8" ever reaches here instead of the normalized "8".
-  const match = semester.match(/\d+/);
-  if (!match) return "";
-  const sem = parseInt(match[0], 10);
-  if (!sem || Number.isNaN(sem)) return "";
-  const year = Math.ceil(sem / 2);
-  return String(year);
-}
-
 function ScalePicker({
   value,
   onChange,
@@ -165,17 +153,15 @@ export default function JoinPage() {
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const derivedYear = useMemo(
+  // Year is derived from the verified session's semester, exactly like
+  // the backend does — it's display-only here. Users can no longer
+  // submit their own year; the backend re-derives and overrides it from
+  // the JWT session regardless of what's sent, so this value is never
+  // read as a source of truth, only shown to the user for confirmation.
+  const year = useMemo(
     () => deriveYear(profile?.semester ?? user?.semester),
     [profile, user]
   );
-  const [year, setYear] = useState("");
-
-  // Pre-fill year from the derived value once we know it, but let the
-  // user override it afterwards (e.g. repeating a year, lateral entry, etc).
-  useEffect(() => {
-    if (derivedYear) setYear(derivedYear);
-  }, [derivedYear]);
 
   function scrollToForm() {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -390,21 +376,10 @@ export default function JoinPage() {
               </div>
               <div className="field">
                 <label>year</label>
-                <select
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  required
-                >
-                  <option value="">select...</option>
-                  <option value="1">1st year</option>
-                  <option value="2">2nd year</option>
-                  <option value="3">3rd year</option>
-                  <option value="4">4th year</option>
-                  <option value="5">5th year</option>
-                </select>
+                <input type="text" value={year} readOnly required />
                 <span className="field-hint">
-                  pre-filled from your PESU semester — change it if it&apos;s
-                  wrong
+                  derived from your PESU semester — this can&apos;t be
+                  edited
                 </span>
               </div>
               <div className="field">

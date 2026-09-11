@@ -1,4 +1,25 @@
 /**
+ * Derives a student's "year" (1-5) from their PESU semester string.
+ *
+ * Shared between the join form (for display/pre-fill only) and the
+ * /api/apply backend route (for the authoritative, security-relevant
+ * calculation). The backend must never trust a client-submitted year —
+ * it always re-derives it from the semester in the verified JWT session.
+ */
+export function deriveYear(semester: string | undefined | null): string {
+  if (!semester) return "";
+  // Defensive: extract the first run of digits rather than requiring
+  // the string to start with one, in case a raw PESU value like
+  // "Sem-8" ever reaches here instead of the normalized "8".
+  const match = semester.match(/\d+/);
+  if (!match) return "";
+  const sem = parseInt(match[0], 10);
+  if (!sem || Number.isNaN(sem)) return "";
+  const year = Math.ceil(sem / 2);
+  return String(year);
+}
+
+/**
  * Formats a date to "DD/MM/YYYY HH:mm:ss" in IST (Asia/Kolkata).
  * SQLite's datetime('now') stores naive UTC timestamps with no timezone
  * suffix (e.g. "2026-09-11 08:30:00"), so a bare 'Z' is appended before
