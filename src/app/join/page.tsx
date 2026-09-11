@@ -330,6 +330,20 @@ export default function JoinPage() {
               Please log in first to apply. We use your PESU Academy login to
               verify your identity and auto-fill your details.
             </p>
+                    <div className="mb-4 rounded border border-fg-dim/30 bg-fg-dim/5 p-3 text-sm">
+          <p className="mb-2 font-medium">
+            Note: To allow us to auto-fill your form, please complete this
+            quick step in line with PESU Academy's IT policy:
+          </p>
+          <ol className="list-decimal space-y-1 pl-5">
+            <li>Open pesuacademy.com</li>
+            <li>Log in with your credentials</li>
+            <li>Check the consent checkbox and click "Agree &amp; Continue"</li>
+          </ol>
+          <p className="mt-2">
+            Please do this when you log in to fill the form.
+          </p>
+        </div>
             <Link href="/login" className="btn btn-solid">
               go_to_login
             </Link>
