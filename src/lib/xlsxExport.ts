@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { formatToIST } from "./date";
 
 export interface ApplicationRow {
@@ -111,12 +111,12 @@ function flattenDomainAnswers(
 }
 
 /**
- * Builds an XLSX workbook from application rows, including every column
+ * Builds an ExcelJS workbook from application rows, including every column
  * (feedback + a flattened domainAnswers) and formatting createdAt to IST.
  */
 export function buildApplicationsWorkbook(
   applications: ApplicationRow[]
-): XLSX.WorkBook {
+): ExcelJS.Workbook {
   // Collect the union of all dynamic domainAnswers keys across rows so
   // every row gets a consistent set of columns.
   const dynamicKeys = new Set<string>();
@@ -126,7 +126,16 @@ export function buildApplicationsWorkbook(
     return flat;
   });
 
-  const rows = applications.map((app, idx) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Applications");
+
+  const dynamicKeysArray = Array.from(dynamicKeys);
+  worksheet.columns = [
+    ...BASE_COLUMNS.map((col) => ({ header: col.header, key: col.header })),
+    ...dynamicKeysArray.map((key) => ({ header: key, key })),
+  ];
+
+  applications.forEach((app, idx) => {
     const row: Record<string, string> = {};
     for (const col of BASE_COLUMNS) {
       const value = app[col.key];
@@ -138,14 +147,11 @@ export function buildApplicationsWorkbook(
         row[col.header] = (value as string) ?? "";
       }
     }
-    for (const key of dynamicKeys) {
+    for (const key of dynamicKeysArray) {
       row[key] = flattenedPerRow[idx][key] ?? "";
     }
-    return row;
+    worksheet.addRow(row);
   });
 
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Applications");
   return workbook;
 }

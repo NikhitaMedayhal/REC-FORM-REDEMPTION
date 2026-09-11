@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import * as XLSX from "xlsx";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { buildApplicationsWorkbook, type ApplicationRow } from "@/lib/xlsxExport";
@@ -31,7 +30,7 @@ export async function GET() {
 
   const applications = result.rows as unknown as ApplicationRow[];
   const workbook = buildApplicationsWorkbook(applications);
-  const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+  const buffer = await workbook.xlsx.writeBuffer();
 
   await client.execute({
     sql: `INSERT INTO audit_logs (srn, ip, user_type, action, detail) VALUES (?, ?, ?, ?, ?)`,

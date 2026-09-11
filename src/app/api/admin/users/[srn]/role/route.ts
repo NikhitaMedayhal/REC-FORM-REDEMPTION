@@ -6,14 +6,14 @@ export const runtime = "nodejs";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { srn: string } }
+  { params }: { params: Promise<{ srn: string }> }
 ) {
   const admin = await requireAdmin();
   if (!admin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const targetSrn = params.srn;
+  const { srn: targetSrn } = await params;
 
   if (targetSrn === admin.srn) {
     return NextResponse.json(
