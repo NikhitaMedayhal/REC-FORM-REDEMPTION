@@ -159,7 +159,7 @@ export default function Terminal({ onApply }: TerminalProps) {
           <span className="term-dot" />
           <span className="term-dot" />
         </div>
-        <span className="term-title">guest@pesu-club:~$</span>
+        <span className="term-title">layer8 — ~</span>
       </div>
 
       <div className="term-body" ref={bodyRef}>
@@ -171,15 +171,21 @@ export default function Terminal({ onApply }: TerminalProps) {
               color:
                 line.variant === "error"
                   ? "var(--danger)"
-                  : line.variant === "prompt"
-                  ? "var(--accent)"
-                  : "var(--fg-dim)",
+                  : line.variant === "output"
+                  ? "var(--fg-dim)"
+                  : "var(--fg)",
             }}
           >
-            {line.text}
+            {line.variant === "prompt" ? (
+              <>
+                <span className="term-prompt">{line.text.slice(0, 1)}</span>
+                {line.text.slice(1)}
+              </>
+            ) : (
+              line.text
+            )}
           </div>
         ))}
-        {booted && <span className="term-cursor" />}
       </div>
 
       <form className="term-input-row" onSubmit={handleSubmit}>

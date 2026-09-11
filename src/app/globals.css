@@ -366,8 +366,9 @@ a {
 /* ---------- terminal ---------- */
 
 .term {
-  background: var(--bg-2);
+  background: color-mix(in srgb, var(--bg-2) 88%, black);
   border: 1px solid var(--border);
+  box-shadow: 0 30px 80px -40px var(--glow);
   overflow: hidden;
 }
 
@@ -375,8 +376,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 0.85rem;
-  background: var(--bg-3);
+  padding: 0.6rem 0.9rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -386,10 +386,10 @@ a {
 }
 
 .term-dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
-  background: var(--border);
+  width: 0.6875rem;
+  height: 0.6875rem;
+  border-radius: 999px;
+  background: var(--fg-faint);
 }
 
 .term-title {
@@ -400,17 +400,23 @@ a {
 }
 
 .term-body {
-  padding: 1.1rem 1.2rem;
-  font-size: 0.85rem;
+  padding: 1.1rem 1.2rem 1.4rem;
+  font-size: 0.78rem;
+  line-height: 1.9;
   min-height: 12rem;
   max-height: 24rem;
   overflow-y: auto;
 }
 
+@media (min-width: 40rem) {
+  .term-body {
+    font-size: 0.86rem;
+  }
+}
+
 .term-line {
   white-space: pre-wrap;
-  word-break: break-word;
-  margin-bottom: 0.2rem;
+  overflow-wrap: anywhere;
 }
 
 .term-prompt {
@@ -419,11 +425,10 @@ a {
 
 .term-cursor {
   display: inline-block;
-  width: 0.55em;
-  height: 1em;
+  width: 0.6ch;
   background: var(--accent);
   vertical-align: text-bottom;
-  animation: term-blink 1s steps(1) infinite;
+  animation: term-blink 1.05s steps(1) infinite;
 }
 
 .term-input-row {
