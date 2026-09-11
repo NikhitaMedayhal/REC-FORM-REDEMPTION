@@ -122,6 +122,8 @@ export default function JoinPage() {
   const formRef = useRef<HTMLDivElement>(null);
 
   const [domains, setDomains] = useState<DomainId[]>([]);
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [portfolioUrl, setPortfolioUrl] = useState("");
   const [experience, setExperience] = useState("");
   const [whyJoin, setWhyJoin] = useState("");
@@ -214,8 +216,8 @@ export default function JoinPage() {
       srn: profile.srn,
       branch: profile.branch,
       year,
-      email: profile.email,
-      phone: profile.phone,
+      email: email.trim(),
+      phone: phone.trim(),
       domains,
       portfolioUrl: portfolioUrl || undefined,
       experience: experience || undefined,
@@ -383,19 +385,33 @@ export default function JoinPage() {
                   <option value="1">1st year</option>
                   <option value="2">2nd year</option>
                   <option value="3">3rd year</option>
+                  <option value="4">4th year</option>
+                  <option value="5">5th year</option>
                 </select>
                 <span className="field-hint">
-                  pre-filled from your PESU details — change it if it&apos;s
+                  pre-filled from your PESU semester — change it if it&apos;s
                   wrong
                 </span>
               </div>
               <div className="field">
                 <label>email</label>
-                <input type="text" value={profile?.email ?? ""} readOnly />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                />
               </div>
               <div className="field">
                 <label>phone</label>
-                <input type="text" value={profile?.phone ?? ""} readOnly />
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="10-digit phone number"
+                />
               </div>
             </div>
 
