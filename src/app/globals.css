@@ -406,6 +406,8 @@ a {
   min-height: 12rem;
   max-height: 24rem;
   overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 40rem) {
@@ -419,8 +421,15 @@ a {
   overflow-wrap: anywhere;
 }
 
+/* Terminal.tsx renders "$" as .prompt and output lines as .muted â€”
+   keep these in sync with the component's actual class names. */
+.term-body .prompt,
 .term-prompt {
   color: var(--accent);
+}
+
+.term-body .muted {
+  color: var(--fg-dim);
 }
 
 .term-cursor {
