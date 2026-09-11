@@ -1,0 +1,53 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# env files — these hold TURSO_DATABASE_URL, TURSO_AUTH_TOKEN,
+# GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_SHEET_ID, JWT
+# secrets, etc. Never commit these.
+.env
+.env*.local
+.env.development
+.env.production
+
+# local db files (if you ever point TURSO_DATABASE_URL at a local file:// db)
+*.db
+*.sqlite
+*.sqlite3
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# testing
+/coverage
+
+# misc
+.DS_Store
+*.pem
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# vercel
+.vercel
+
+# xlsx export scratch files, if any get generated locally
+/tmp
