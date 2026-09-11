@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const isProd = process.env.NODE_ENV === "production";
 
 const csp = [
@@ -12,8 +18,7 @@ const csp = [
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-]
-  .join("; ");
+].join("; ");
 
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -37,6 +42,9 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  turbopack: {
+    root: __dirname,
+  },
   async headers() {
     return [
       {

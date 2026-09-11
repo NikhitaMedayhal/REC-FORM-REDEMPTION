@@ -459,6 +459,11 @@ export default function JoinPage() {
                 onChange={(e) => setPortfolioUrl(e.target.value)}
                 placeholder="https://..."
               />
+              <p className="text-fg-faint text-xs mt-1">
+                using a google drive/docs link? click{" "}
+                <span className="text-fg-dim">share → general access → anyone with the link</span>{" "}
+                before pasting it here, or we won&apos;t be able to open it.
+              </p>
             </div>
             <div className="field">
               <label>relevant experience (optional)</label>

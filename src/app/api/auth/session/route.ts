@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 export const runtime = "nodejs";
 
 export async function GET() {
-  const token = cookies().get(COOKIE_NAME)?.value;
+  const token = (await cookies()).get(COOKIE_NAME)?.value;
   const payload = await verifyToken(token);
 
   if (!payload) {

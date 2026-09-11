@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
 
   // 1. Require a logged-in user.
-  const token = cookies().get(COOKIE_NAME)?.value;
+  const token = (await cookies()).get(COOKIE_NAME)?.value;
   const session = await verifyToken(token);
   if (!session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });

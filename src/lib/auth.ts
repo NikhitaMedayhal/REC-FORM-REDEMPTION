@@ -7,7 +7,7 @@ import { COOKIE_NAME, verifyToken, type L8TokenPayload } from "./jwt";
  * if unauthenticated / not an admin.
  */
 export async function requireAdmin(): Promise<L8TokenPayload | null> {
-  const token = cookies().get(COOKIE_NAME)?.value;
+  const token = (await cookies()).get(COOKIE_NAME)?.value;
   const payload = await verifyToken(token);
 
   if (!payload || payload.role !== "admin") {
@@ -22,6 +22,6 @@ export async function requireAdmin(): Promise<L8TokenPayload | null> {
  * (member or admin). Returns the token payload, or null if unauthenticated.
  */
 export async function requireUser(): Promise<L8TokenPayload | null> {
-  const token = cookies().get(COOKIE_NAME)?.value;
+  const token = (await cookies()).get(COOKIE_NAME)?.value;
   return verifyToken(token);
 }
